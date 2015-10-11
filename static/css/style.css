@@ -1,0 +1,27 @@
+#title{
+    height:60px;
+}
+p#title{
+    font-weight:bold;
+    font-size:30px;
+}
+#players{
+    line-height:25px;
+    height:200px;
+    width=8%;
+    float:left;
+    padding:10px;
+    text-align:center;
+}
+#interface {
+    height:230px;
+    width:50%;
+    float:left;
+    text-align:left;
+    padding:15px;
+}
+#notif{
+    height:100px;
+    width:20%;
+    padding:90px;
+}

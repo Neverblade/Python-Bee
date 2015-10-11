@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Python Spelling Bee
+	</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<div id="title"; align="left">
+    <p id="title"> Python Spelling Bee </p>
+</div>
+<div
+<div id="players">
+<p id="1"> </p>
+<p id="2"> </p>
+<p id="3"> </p>
+<p id="4"> </p>
+</div>
+ 
+<div id="interface">
+    <textarea id="prob_statement" rows="4" cols="50"> Problem Here &#10 hello</textarea>
+    <p></p>
+  <textarea id="code" rows="10" cols="50"> </textarea>
+  <p></p>
+<input id="input" type="text">
+<button type="button" onclick="input()">Submit</button>
+    <p id="errors"> No Errors</p>
+</div>
+    
+
+    </body>
+<script>
+var x=0;
+var y=1;
+var identity=1;
+document.getElementById("1").style="font-weight:bold; color:green;";
+addPlayer();
+addPlayer();
+addPlayer();
+function addPlayer() {
+    x=x+1;
+    document.getElementById(x).innerHTML = "Player " + x;
+	document.getElementById(x).style="font-weight:normal; color:black:;
+}
+
+function input(){
+    if (y!=identity){
+        document.getElementById("errors").innerHTML = "Not your turn";
+    }
+    else{
+        var x = document.getElementById("input");
+        nextPlayer();
+    }
+}
+function nextPlayer(){
+    document.getElementById(y).style="font-weight:normal; color:black";
+    y=(y+1)%x;
+    if(y==0){
+        y=x;
+    }
+    document.getElementById(y).style="font-weight:bold; color:green";
+}
+</script>
+</html>
+
+
