@@ -25,27 +25,29 @@ def index():
     return render_template('index.html')
 
 
-@socketio.on('send char', namespace='/test')
+@socketio.on('send char', namespace='/game')
 def get_message(message):
     data = message['data']
-    game.turn(session['id'], data)
-    response = data
-    if data == ';':
-        response = '<br>'
-    emit('my response', {'data': response}, broadcast=True)
+    game.go(session['id'], data)
+    emit('game state', {'data': game.state()}, broadcast=True)
 
 
-@socketio.on('connect', namespace='/test')
+@socketio.on('connect', namespace='/game')
 def connect():
     session['id'] = str(uuid4())
+    join_room(session['id'])
+
     print(session['id'])
+
     game.add_player(session['id'])
-    emit('my response', {'data': 'Connected'})
+    emit('connection', {'data': 'Connected'})
 
 
-@socketio.on('disconnect', namespace='/test')
+@socketio.on('disconnect', namespace='/game')
 def disconnect():
     game.remove_player(session['id'])
+    for sid, player in game.players.items():
+        emit('player id', {'data': player.player_id}, room=sid)
     print('Client disconnected')
 
 

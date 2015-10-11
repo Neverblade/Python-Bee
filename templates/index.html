@@ -6,7 +6,7 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
-            namespace = '/test'; // change to an empty string to use the global namespace
+            namespace = '/game'; // change to an empty string to use the global namespace
 
             // the socket.io documentation recommends sending an explicit package upon connection
             // this is specially important when using the global namespace
@@ -15,19 +15,37 @@
                 socket.emit('send char', {data: 'I\'m connected!<br>'});
             });
 
+            socket.on('connection', function(msg) {
+                $('#connection-status').text(msg.data);
+            });
+
+            socket.on('player id', function(msg) {
+                $('#player-id').text(msg.data);
+            });
+
+            socket.on('game state', function(msg) {
+                var state = msg.data;
+                $('#log').text(state.program);
+
+                var players = state.players;
+                var cur_turn = state.cur_turn;
+            });
+
             socket.on('my response', function(msg) {
                 $('#log').append(msg.data);
             });
 
             $('form#char').submit(function(event) {
                 socket.emit('send char', {data: $('#char_data').val()});
-                $('#char_data').val('')
+                $('#char_data').val('');
                 return false;
             });
        });
     </script>
 </head>
 <body>
+    <div id="connection-status">Waiting...</div>
+    <div id="player-id"></div>
     <h1>Flask-SocketIO Test</h1>
     <h2>Send:</h2>
     <form id="char" method="POST" action='#'>
