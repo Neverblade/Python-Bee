@@ -12,7 +12,7 @@
             // this is specially important when using the global namespace
             var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
             socket.on('connect', function() {
-                socket.emit('send char', {data: 'I\'m connected!<br>'});
+                //socket.emit('send char', {data: 'I\'m connected!<br>'});
             });
 
             socket.on('connection', function(msg) {
@@ -31,6 +31,10 @@
                 var cur_turn = state.cur_turn;
             });
 
+            socket.on('error', function(msg) {
+                $('#error').text(msg.data);
+            });
+
             socket.on('my response', function(msg) {
                 $('#log').append(msg.data);
             });
@@ -40,14 +44,24 @@
                 $('#char_data').val('');
                 return false;
             });
+
+            $('form#start').submit(function(event) {
+                socket.emit('start', {});
+                $('#error').text('');
+                return false;
+            });
        });
     </script>
 </head>
 <body>
     <div id="connection-status">Waiting...</div>
     <div id="player-id"></div>
+    <div id="error" style="color:red"></div>
     <h1>Flask-SocketIO Test</h1>
     <h2>Send:</h2>
+    <form id="start" method="POST" action='#'>
+        <input type="submit" value="Start Game!">
+    </form>
     <form id="char" method="POST" action='#'>
         <input type="text" name="char_data" id="char_data" maxlength="1">
         <input type="submit" value="Send">

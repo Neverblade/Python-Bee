@@ -28,9 +28,15 @@ def index():
 @socketio.on('send char', namespace='/game')
 def get_message(message):
     data = message['data']
-    game.go(session['id'], data)
+    error = game.go(session['id'], data)
+    emit('error', {'data': error})
     emit('game state', {'data': game.state()}, broadcast=True)
 
+
+@socketio.on('start', namespace='/game')
+def start(message):
+    game.start()
+    emit('game state', {'data': game.state()}, broadcast=True)
 
 @socketio.on('connect', namespace='/game')
 def connect():
@@ -41,6 +47,7 @@ def connect():
 
     game.add_player(session['id'])
     emit('connection', {'data': 'Connected'})
+    emit('player id', {'data': game.players[session['id']].player_id})
 
 
 @socketio.on('disconnect', namespace='/game')
@@ -52,6 +59,5 @@ def disconnect():
 
 
 if __name__ == '__main__':
-    game.start()
     app.debug = True
     socketio.run(app, host = '0.0.0.0')
